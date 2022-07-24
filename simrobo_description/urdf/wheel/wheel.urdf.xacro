@@ -28,11 +28,11 @@
       </collision>
     </link>
     
-    <joint name="${name}_wheel_joint" type="fixed">
+    <joint name="${name}_wheel_joint" type="continuous">
       <xacro:insert_block name="origin"/>
       <parent link="${parent}"/>
       <child link="${name}_wheel_link"/>
-      <axis xyz="0 0 1"/>
+      <axis xyz="0.0 0.0 1.0"/>
     </joint>
   </xacro:macro>
 </robot>

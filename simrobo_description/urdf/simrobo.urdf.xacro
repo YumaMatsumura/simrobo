@@ -9,7 +9,7 @@
   <xacro:property name="body_width" value="0.1"/>
   <xacro:property name="body_height" value="0.2"/>
   <xacro:property name="body_mass" value="1"/>
-  <xacro:property name="wheel_radius" value="0.14"/>
+  <xacro:property name="wheel_radius" value="0.1"/>
   <xacro:property name="wheel_clearance" value="0.01"/>
   <xacro:property name="wheel_mass" value="0.4"/>
   
@@ -21,9 +21,9 @@
   
   <!-- ======== Wheel Description ======== -->
   <xacro:wheel name="left" parent="base_link" radius="${wheel_radius}" clearance="${wheel_clearance}" mass="${wheel_mass}">
-    <origin xyz="1 0 0" rpy="0 0 0"/>
+    <origin xyz="0 ${body_width/2} 0" rpy="${-pi/2} 0 0"/>
   </xacro:wheel>
   <xacro:wheel name="right" parent="base_link"  radius="${wheel_radius}" clearance="${wheel_clearance}" mass="${wheel_mass}">
-    <origin xyz="-1 0 0" rpy="0 0 0"/>
+    <origin xyz="0 ${-body_width/2} 0" rpy="${-pi/2} 0 0"/>
   </xacro:wheel>
 </robot>

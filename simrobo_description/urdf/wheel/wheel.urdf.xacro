@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="wheel" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find simrobo_description)/urdf/wheel/wheel.gazebo.xacro" />
+  
   <xacro:macro name="wheel" params="name parent radius clearance mass *origin">
     <material name="${name}_wheel_color">
       <color rgba="1.0 1.0 1.0 1.0"/>
@@ -34,5 +36,8 @@
       <child link="${name}_wheel_link"/>
       <axis xyz="0.0 0.0 1.0"/>
     </joint>
+    
+    <!-- Gazebo Plugin -->
+    <xacro:wheel_gazebo name="${name}"/>
   </xacro:macro>
 </robot>

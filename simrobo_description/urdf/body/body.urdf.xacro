@@ -1,33 +1,29 @@
 <?xml version="1.0" ?>
 <robot name="body" xmlns:xacro="http://www.ros.org/wiki/xacro">
   
-  <xacro:macro name="body" params="name *origin">
-    <xacro:property name="BODY_DEPTH" value="0.14"/>
-    <xacro:property name="BODY_WIDTH" value="0.1"/>
-    <xacro:property name="BODY_HEIGHT" value="0.2"/>
-    <xacro:property name="MASS" value="1"/>
+  <xacro:macro name="body" params="name depth width height mass *origin">
     
     <link name="${name}">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="${MASS}" />
-        <inertia ixx="${MASS/12*(BODY_WIDTH*BODY_WIDTH+BODY_HEIGHT*BODY_HEIGHT)}" ixy="0" ixz="0"
-                 iyx="0" iyy="${MASS/12*(BODY_DEPTH*BODY_DEPTH+BODY_HEIGHT*BODY_HEIGHT)}" iyz="0"
-                 izx="0" izy="0" izz="${MASS/12*(BODY_DEPTH*BODY_DEPTH+BODY_WIDTH*BODY_WIDTH)}"/>
+        <mass value="${mass}" />
+        <inertia ixx="${mass/12*(width*width+height*height)}" ixy="0" ixz="0"
+                 iyx="0" iyy="${mass/12*(depth*depth+height*height)}" iyz="0"
+                 izx="0" izy="0" izz="${mass/12*(depth*depth+width*width)}"/>
       </inertial>
       <visual>
-        <origin xyz="0 0 ${BODY_HEIGHT/2}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
         <geometry>
-          <box size="${BODY_DEPTH} ${BODY_WIDTH} ${BODY_HEIGHT}"/>
+          <box size="${depth} ${width} ${height}"/>
         </geometry>
         <material name="body_color">
           <color rgba="1.0 0.0 0.0 1.0"/>
         </material>
       </visual>
       <collision>
-        <origin xyz="0 0 ${BODY_HEIGHT/2}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
         <geometry>
-          <box size="${BODY_DEPTH} ${BODY_WIDTH} ${BODY_HEIGHT}"/>
+          <box size="${depth} ${width} ${height}"/>
         </geometry>
       </collision>
     </link>

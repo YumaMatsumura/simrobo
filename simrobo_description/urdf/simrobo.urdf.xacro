@@ -5,13 +5,17 @@
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/wheel.urdf.xacro" />
   
   <!-- property -->
+  <xacro:property name="body_depth" value="0.14"/>
+  <xacro:property name="body_width" value="0.1"/>
+  <xacro:property name="body_height" value="0.2"/>
+  <xacro:property name="body_mass" value="1"/>
   <xacro:property name="wheel_radius" value="0.14"/>
   <xacro:property name="wheel_clearance" value="0.01"/>
   <xacro:property name="wheel_mass" value="0.4"/>
   
   <!-- ======== Body Description ======== -->
   <link name="base_footprint"/>
-  <xacro:body name="base_link">
+  <xacro:body name="base_link" depth="${body_depth}" width="${body_width}" height="${body_height}" mass="${body_mass}">
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </xacro:body>
   

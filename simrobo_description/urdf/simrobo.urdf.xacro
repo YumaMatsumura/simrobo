@@ -3,6 +3,7 @@
   <!-- include xacro files -->
   <xacro:include filename="$(find simrobo_description)/urdf/body/body.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/wheel.urdf.xacro" />
+  <xacro:include filename="$(find simrobo_description)/urdf/wheel/caster.urdf.xacro" />
   
   <!-- property -->
   <xacro:property name="body_depth" value="0.14"/>
@@ -12,6 +13,8 @@
   <xacro:property name="wheel_radius" value="0.1"/>
   <xacro:property name="wheel_clearance" value="0.01"/>
   <xacro:property name="wheel_mass" value="0.4"/>
+  <xacro:property name="caster_radius" value="0.04"/>
+  <xacro:property name="caster_mass" value="0.2"/>
   
   <!-- ======== Body Description ======== -->
   <link name="base_footprint"/>
@@ -23,7 +26,10 @@
   <xacro:wheel name="left" parent="base_link" radius="${wheel_radius}" clearance="${wheel_clearance}" mass="${wheel_mass}">
     <origin xyz="0 ${body_width/2+wheel_clearance/2} 0" rpy="${-pi/2} 0 0"/>
   </xacro:wheel>
-  <xacro:wheel name="right" parent="base_link"  radius="${wheel_radius}" clearance="${wheel_clearance}" mass="${wheel_mass}">
+  <xacro:wheel name="right" parent="base_link" radius="${wheel_radius}" clearance="${wheel_clearance}" mass="${wheel_mass}">
     <origin xyz="0 ${-body_width/2-wheel_clearance/2} 0" rpy="${-pi/2} 0 0"/>
   </xacro:wheel>
+  <xacro:caster name="back" parent="base_link" radius="${caster_radius}" mass="${caster_mass}">
+    <origin xyz="0 0 ${-wheel_radius+caster_radius}" rpy="0 0 0"/>
+  </xacro:caster>
 </robot>

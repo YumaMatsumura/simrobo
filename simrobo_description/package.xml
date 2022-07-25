@@ -13,6 +13,11 @@
   <depend>robot_state_publisher</depend>
   <depend>xacro</depend>
   <depend>urdf</depend>
+  <depend>rviz2</depend>
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
+  <depend>gazebo_ros</depend>
+  <depend>gazebo_ros2_control</depend>
   <depend>launch</depend>
   <depend>launch_ros</depend>
 

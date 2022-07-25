@@ -5,6 +5,7 @@
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/wheel.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/caster.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/lidar.urdf.xacro" />
+  <xacro:include filename="$(find simrobo_description)/urdf/simrobo.ros2_control.xacro" />
   
   <!-- property -->
   <xacro:property name="body_depth" value="0.4"/>
@@ -43,4 +44,8 @@
   <xacro:lidar name="laser" parent="base_link" radius="${lidar_radius}" length="${lidar_length}" mass="${lidar_mass}">
     <origin xyz="0 0 ${body_height+lidar_length/2}" rpy="0 0 0"/>
   </xacro:lidar>
+  
+  <!-- ======== ros2_control ======== -->
+  <xacro:simrobo_ros2_control name="simrobo"/>
+  
 </robot>

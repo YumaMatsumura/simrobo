@@ -28,6 +28,18 @@ def generate_launch_description():
                     '-topic', '/robot_description'],
         output='screen'
     )
+    
+    joint_state_broadcaster = ExecuteProcess(
+        cmd=["ros2", "control", "load_controller", "joint_state_broadcaster", 
+             "--set-state", "start"],
+        output="screen"
+    )
+    
+    velocity_controller = ExecuteProcess(
+        cmd=["ros2", "control", "load_controller", "velocity_controller", 
+             "--set-state", "start"],
+        output="screen"
+    )
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -57,5 +69,20 @@ def generate_launch_description():
             condition=IfCondition(LaunchConfiguration('gui'))
         ),
         
-        spawn_entity        
+        spawn_entity,
+        
+        # ===== Ros2 Control ===== #        
+        RegisterEventHandler(
+            OnProcessExit(
+                target_action=spawn_entity,
+                on_exit=[velocity_controller]
+            )
+        ),
+        
+        RegisterEventHandler(
+            OnProcessExit(
+                target_action=joint_state_broadcaster,
+                on_exit=[velocity_controller]
+            )
+        )       
     ])

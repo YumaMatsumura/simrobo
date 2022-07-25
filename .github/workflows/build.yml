@@ -1,0 +1,28 @@
+vname: ros workflows test
+on: 
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+jobs:
+  ros_workflows_test:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Make directories
+        run: mkdir -p ros2_ws/src
+      - name: Checkout
+        uses: actions/checkout@v2
+        with: 
+          path: ros2_ws/src
+      - name: Setup ROS2 environment
+        uses: ros-tooling/setup-ros@v0.2
+        with: 
+          required-ros-distributions: foxy
+      - name: Build and Test
+        uses: ros-tooling/action-ros-ci@v0.2
+        with:
+          package-name: simrobo
+          target-ros2-distro: foxy
+          vcs-repo-file-url: ""

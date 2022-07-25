@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find simrobo_description)/urdf/sensors/lidar.gazebo.xacro"/>
+  
   <xacro:macro name="lidar" params="name:=laser parent radius length mass *origin">
     <material name="${name}_color">
       <color rgba="0.70196 0.70196 0.70196 1.0"/>
@@ -33,5 +35,9 @@
       <parent link="${parent}"/>
       <child link="${name}"/>
     </joint>
+    
+    <!-- Gazebo Plugin -->
+    <xacro:lidar_gazebo name="${name}"/>
+    
   </xacro:macro>
 </robot>

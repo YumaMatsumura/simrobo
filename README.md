@@ -1,4 +1,6 @@
 # simrobo
+[![BuildAndTest](https://img.shields.io/github/workflow/status/YumaMatsumura/simrobo/build%20and%20test/master)](https://github.com/YumaMatsumura/simrobo/actions/workflows/build.yml)
+
 ## 説明
 本パッケージは、差動二輪ロボットをROS2でシミュレートしたいときに使用できるものである。
 

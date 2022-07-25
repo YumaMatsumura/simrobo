@@ -1,11 +1,11 @@
-vname: ros workflows test
+name: build and test
 on: 
   pull_request:
     branches: [ master ]
   push:
     branches: [ master ]
 jobs:
-  ros_workflows_test:
+  build_simrobo:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false

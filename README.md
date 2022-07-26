@@ -17,3 +17,8 @@ sudo apt install ros-foxy-joint-state-publisher ros-foxy-joint-state-publisher-g
 ```bash
 ros2 launch simrobo_description display.launch.py
 ```
+
+### ジョイコン操作
+```bash
+ros2 launch simrobo_driver driver.launch.py
+```

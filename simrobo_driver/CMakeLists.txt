@@ -21,6 +21,8 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tf2 REQUIRED)
 
 include_directories(
   include
@@ -33,6 +35,8 @@ ament_target_dependencies(driver_library
   rclcpp_components
   std_msgs
   geometry_msgs
+  nav_msgs
+  tf2
 )
 rclcpp_components_register_nodes(driver_library
   "simrobo_driver::Driver"
@@ -58,5 +62,7 @@ ament_export_dependencies(
   rclcpp_components
   std_msgs
   geometry_msgs
+  nav_msgs
+  tf2
 )
 ament_package()

@@ -23,6 +23,7 @@ public:
   );
   
 private:
+  void initVariables();
   float velocityToRound(float vel);
   void twistCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
   void updateCallback();

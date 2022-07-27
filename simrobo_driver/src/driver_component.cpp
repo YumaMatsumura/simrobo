@@ -6,11 +6,10 @@ namespace simrobo_driver
 // ========== コンストラクタ ========== //
 Driver::Driver(
   const rclcpp::NodeOptions& options
-): Node("simrobo_driver", options),
-   pos{0.0, 0.0, 0.0}
+): Node("simrobo_driver", options)
 {
   // initialize
-  prev_time = this->now();
+  initVariables();
 
   // parameters
   wheel_radius_m_ = this->declare_parameter<float>("wheel_radius_size_m", 0.1);
@@ -27,7 +26,19 @@ Driver::Driver(
   );
 }
 
-// ========== 速度(m/s)->角速度(rad/s)変換関数
+// ========== 変数の初期化 ========== //
+void Driver::initVariables()
+{
+  prev_time = this->now();
+  twist_buff.linear.x = 0.0;
+  twist_buff.linear.y = 0.0;
+  twist_buff.angular.z = 0.0;
+  pos[0] = 0.0;
+  pos[1] = 0.0;
+  pos[2] = 0.0;
+}
+
+// ========== 速度(m/s)->角速度(rad/s)変換関数 ========== //
 float Driver::velocityToRound(float vel)
 {
   return vel / (wheel_radius_m_ * 2.0 * M_PI);

@@ -24,6 +24,7 @@ Driver::Driver(
   sub_twist_ = this->create_subscription<geometry_msgs::msg::Twist>(
     "cmd_vel", 1, std::bind(&Driver::twistCallback, this, _1)
   );
+  timer_ = this->create_wall_timer(10ms, std::bind(&Driver::updateCallback, this));
 }
 
 // ========== 変数の初期化 ========== //

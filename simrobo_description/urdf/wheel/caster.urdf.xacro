@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="caster" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find simrobo_description)/urdf/wheel/caster.gazebo.xacro" />
+  
   <xacro:macro name="caster" params="name parent radius mass *origin">
     <material name="${name}_caster_color">
       <color rgba="1.0 1.0 1.0 1.0"/>
@@ -34,5 +36,8 @@
       <child link="${name}_caster_link"/>
       <axis xyz="0.0 0.0 1.0"/>
     </joint>
+    
+    <!-- Gazebo Plugin -->
+    <xacro:caster_gazebo name="${name}"/>
   </xacro:macro>
 </robot>

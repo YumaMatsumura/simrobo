@@ -16,14 +16,15 @@ Driver::Driver(
   wheel_radius_m_ = this->declare_parameter<float>("wheel_radius_size_m", 0.1);
   tread_width_m_ = this->declare_parameter<float>("tread_width_m", 0.33);
   global_frame_id_ = this->declare_parameter<std::string>("global_frame_id", "odom");
+  base_frame_id_ = this->declare_parameter<std::string>("base_frame_id", "base_footprint");
 
   // publisher, subscriber & timer
   pub_servo_ = this->create_publisher<std_msgs::msg::Float64MultiArray>("/velocity_controller/commands", 1);
   pub_odom_ = this->create_publisher<nav_msgs::msg::Odometry>("odom", 1);
+  pub_tf_ = this->create_publisher<tf2_msgs::msg::TFMessage>("tf", 1);
   sub_twist_ = this->create_subscription<geometry_msgs::msg::Twist>(
     "cmd_vel", 1, std::bind(&Driver::twistCallback, this, _1)
   );
-  timer_ = this->create_wall_timer(10ms, std::bind(&Driver::updateCallback, this));
 }
 
 // ========== 速度(m/s)->角速度(rad/s)変換関数
@@ -50,6 +51,10 @@ void Driver::updateCallback()
 
   // Odometryの計算
   publishOdom(current_time, duration);
+
+  // TFの計算
+  publishTF(current_time);
+
   // Velocity Commandの計算
   publishVelCommand();
 }
@@ -65,7 +70,6 @@ void Driver::publishOdom(const rclcpp::Time & now, const rclcpp::Duration & dura
   tf2::Quaternion q;
   q.setRPY(0, 0, pos[2]);
 
-  auto odom_msg = nav_msgs::msg::Odometry();
   odom_msg.header.stamp = now;
   odom_msg.header.frame_id = global_frame_id_;
   odom_msg.pose.pose.position.x = pos[0];
@@ -83,6 +87,23 @@ void Driver::publishOdom(const rclcpp::Time & now, const rclcpp::Duration & dura
   odom_msg.twist.twist.angular.z = twist_buff.angular.z;
 
   pub_odom_->publish(odom_msg);
+}
+
+// ========== TFをPublishする関数 ========== //
+void Driver::publishTF(const rclcpp::Time & now)
+{
+  auto tf_msg = geometry_msgs::msg::TransformStamped();
+  auto tf_odom_msg = tf2_msgs::msg::TFMessage();
+  tf_msg.header.stamp = now;
+  tf_msg.header.frame_id = global_frame_id_;
+  tf_msg.child_frame_id = base_frame_id_;
+  tf_msg.transform.translation.x = odom_msg.pose.pose.position.x;
+  tf_msg.transform.translation.y = odom_msg.pose.pose.position.y;
+  tf_msg.transform.translation.z = odom_msg.pose.pose.position.z;
+  tf_msg.transform.rotation = odom_msg.pose.pose.orientation;
+
+  tf_odom_msg.transforms.push_back(tf_msg);
+  pub_tf_->publish(tf_odom_msg);
 }
 
 // ========== Velocity CommandをPublishする関数 ========== //

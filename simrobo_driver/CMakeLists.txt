@@ -22,6 +22,7 @@ find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(tf2_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 
 include_directories(
@@ -36,6 +37,7 @@ ament_target_dependencies(driver_library
   std_msgs
   geometry_msgs
   nav_msgs
+  tf2_msgs
   tf2
 )
 rclcpp_components_register_nodes(driver_library
@@ -63,6 +65,7 @@ ament_export_dependencies(
   std_msgs
   geometry_msgs
   nav_msgs
+  tf2_msgs
   tf2
 )
 ament_package()

@@ -8,7 +8,7 @@ teleop_twist_joy_node:
       y: 0.75
 
     axis_angular:  # Right thumb stick rotate
-      yaw: 3
+      yaw: 0
     scale_angular:
       yaw: 0.8
 

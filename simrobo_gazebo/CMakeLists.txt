@@ -22,7 +22,7 @@ find_package(ros2_controllers REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(gazebo_ros2_control REQUIRED)
 
-install(DIRECTORY launch
+install(DIRECTORY launch worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

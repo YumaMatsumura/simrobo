@@ -17,7 +17,7 @@
           </scan>
           <range>
             <min>0.1</min>
-            <max>3.5</max>
+            <max>5.0</max>
             <resolution>0.01</resolution>
           </range>
           <noise>
@@ -27,7 +27,10 @@
           </noise>
         </ray>
         <plugin name="gazebo_ros_head_lidar_controller" filename="libgazebo_ros_ray_sensor.so">
-          <topicName>/scan</topicName>
+          <ros>
+            <remapping>~/out:=scan</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
           <frameName>laser</frameName>
         </plugin>
       </sensor>

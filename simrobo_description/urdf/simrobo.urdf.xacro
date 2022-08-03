@@ -5,6 +5,7 @@
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/wheel.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/caster.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/lidar.urdf.xacro" />
+  <xacro:include filename="$(find simrobo_description)/urdf/sensors/imu.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/simrobo.ros2_control.xacro" />
   
   <!-- property -->
@@ -22,6 +23,9 @@
   <xacro:property name="lidar_radius" value="0.04"/>
   <xacro:property name="lidar_length" value="0.04"/>
   <xacro:property name="lidar_mass" value="0.015"/>
+  <xacro:property name="imu_length" value="0.02"/>
+  <xacro:property name="imu_height" value="0.01"/>
+  <xacro:property name="imu_mass" value="0.01"/>
   
   <!-- ======== Body Description ======== -->
   <link name="base_footprint"/>
@@ -44,6 +48,9 @@
   <xacro:lidar name="laser" parent="base_link" radius="${lidar_radius}" length="${lidar_length}" mass="${lidar_mass}">
     <origin xyz="0 0 ${body_height+lidar_length/2}" rpy="0 0 0"/>
   </xacro:lidar>
+  <xacro:imu name="imu" parent="base_link" length="${imu_length}" height="${imu_height}" mass="${imu_mass}">
+    <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
+  </xacro:imu>
   
   <!-- ======== ros2_control ======== -->
   <xacro:simrobo_ros2_control name="simrobo"/>

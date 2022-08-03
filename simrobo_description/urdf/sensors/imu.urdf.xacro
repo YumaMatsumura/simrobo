@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<robot name="imu" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find simrobo_description)/urdf/sensors/imu.gazebo.xacro"/>
+  
+  <xacro:macro name="imu" params="name length height mass parent *origin">
+    <material name="${name}_color">
+      <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+    
+    <link name="${name}_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${mass}" />
+        <inertia ixx="${mass/6*length*length}" ixy="0" ixz="0"
+                 iyx="0" iyy="${mass/12*(height*height+length*length)}" iyz="0"
+                 izx="0" izy="0" izz="${mass/12*(height*height+length*length)}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${length} ${length} ${height}"/>
+        </geometry>
+        <material name="${name}_color"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${length} ${length} ${height}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+    
+    <!-- Gazebo Plugin -->
+    <xacro:imu_gazebo name="${name}"/>
+    
+  </xacro:macro>
+</robot>

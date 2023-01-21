@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<robot name="camera" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find simrobo_description)/urdf/sensors/camera.gazebo.xacro"/>
+  
+  <xacro:macro name="camera" params="name depth width height mass parent *origin">
+    <material name="${name}_color">
+      <color rgba="0.70196 0.70196 0.70196 1.0"/>
+    </material>
+    
+    <link name="${name}_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${mass}" />
+        <inertia ixx="${mass/12*(width*width+height*height)}" ixy="0" ixz="0"
+                 iyx="0" iyy="${mass/12*(depth*depth+height*height)}" iyz="0"
+                 izx="0" izy="0" izz="${mass/12*(depth*depth+width*width)}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${depth} ${width} ${height}"/>
+        </geometry>
+        <material name="${name}_color"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${depth} ${width} ${height}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <joint name="${name}_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+    
+    <!-- Gazebo Plugin -->
+    <xacro:camera_gazebo name="${name}"/>
+    
+  </xacro:macro>
+</robot>

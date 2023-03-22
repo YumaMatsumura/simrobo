@@ -65,7 +65,7 @@ def generate_launch_description():
                 parameters=[
                     {'wheel_radius_size_m': 0.1},
                     {'tread_width_m': 0.33},
-                    {'global_frame_id': 'odom'},
+                    {'odom_frame_id': 'odom'},
                     {'base_frame_id': 'base_footprint'}])
         ])
     

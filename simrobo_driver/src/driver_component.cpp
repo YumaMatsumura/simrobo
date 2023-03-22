@@ -14,7 +14,7 @@ Driver::Driver(
   // parameters
   wheel_radius_m_ = this->declare_parameter<float>("wheel_radius_size_m", 0.1);
   tread_width_m_ = this->declare_parameter<float>("tread_width_m", 0.33);
-  global_frame_id_ = this->declare_parameter<std::string>("global_frame_id", "odom");
+  odom_frame_id_ = this->declare_parameter<std::string>("odom_frame_id", "odom");
   base_frame_id_ = this->declare_parameter<std::string>("base_frame_id", "base_footprint");
 
   // publisher, subscriber & timer
@@ -83,7 +83,8 @@ void Driver::publishOdom(const rclcpp::Time & now, const rclcpp::Duration & dura
   q.setRPY(0, 0, pos[2]);
 
   odom_msg.header.stamp = now;
-  odom_msg.header.frame_id = global_frame_id_;
+  odom_msg.header.frame_id = odom_frame_id_;
+  odom_msg.child_frame_id = base_frame_id_;
   odom_msg.pose.pose.position.x = pos[0];
   odom_msg.pose.pose.position.y = pos[1];
   odom_msg.pose.pose.position.z = 0.0;
@@ -107,7 +108,7 @@ void Driver::publishTF(const rclcpp::Time & now)
   auto tf_msg = geometry_msgs::msg::TransformStamped();
   auto tf_odom_msg = tf2_msgs::msg::TFMessage();
   tf_msg.header.stamp = now;
-  tf_msg.header.frame_id = global_frame_id_;
+  tf_msg.header.frame_id = odom_frame_id_;
   tf_msg.child_frame_id = base_frame_id_;
   tf_msg.transform.translation.x = odom_msg.pose.pose.position.x;
   tf_msg.transform.translation.y = odom_msg.pose.pose.position.y;

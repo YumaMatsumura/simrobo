@@ -43,7 +43,7 @@ private:
   float wheel_radius_m_;
   float tread_width_m_;
   double pos[3];
-  std::string global_frame_id_;
+  std::string odom_frame_id_;
   std::string base_frame_id_;
 };
 

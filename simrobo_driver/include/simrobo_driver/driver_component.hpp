@@ -3,14 +3,14 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/pose2_d.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <std_msgs/msg/float64_multi_array.hpp>
 #include <nav_msgs/msg/odometry.hpp>
-#include <tf2_msgs/msg/tf_message.hpp>
 #include <tf2/LinearMath/Quaternion.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 using namespace std::placeholders;
-using namespace std::chrono_literals;
 
 namespace simrobo_driver
 {
@@ -24,25 +24,25 @@ public:
   
 private:
   void initVariables();
-  float velocityToRound(float vel);
   void twistCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
   void updateCallback();
-  void publishOdom(const rclcpp::Time & now, const rclcpp::Duration & duration);
-  void publishTF(const rclcpp::Time & now);
+  void publishOdom();
+  void publishTF();
   void publishVelCommand();
+  double velocityToRound(double vel);
   
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_servo_;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr pub_odom_;
-  rclcpp::Publisher<tf2_msgs::msg::TFMessage>::SharedPtr pub_tf_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist_;
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Time prev_time;
   
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  geometry_msgs::msg::Pose2D pose_;
   geometry_msgs::msg::Twist twist_buff;
   nav_msgs::msg::Odometry odom_msg;
-  float wheel_radius_m_;
-  float tread_width_m_;
-  double pos[3];
+  double wheel_radius_m_;
+  double tread_width_m_;
+  double frequency_;
   std::string odom_frame_id_;
   std::string base_frame_id_;
 };

@@ -9,7 +9,9 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <exec_depend>simrobo_bringup</exec_depend>
   <exec_depend>simrobo_description</exec_depend>
+  <exec_depend>simrobo_driver</exec_depend>
   <exec_depend>simrobo_gazebo</exec_depend>
 
   <export>

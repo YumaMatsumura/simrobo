@@ -23,6 +23,8 @@ find_package(ros2_control REQUIRED)
 find_package(ros2_controllers REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(gazebo_ros2_control REQUIRED)
+find_package(gazebo_plugins REQUIRED)
+find_package(velodyne_gazebo_plugins REQUIRED)
 
 install(DIRECTORY urdf launch rviz controllers
   DESTINATION share/${PROJECT_NAME}

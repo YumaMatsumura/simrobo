@@ -26,6 +26,7 @@ def generate_launch_description():
     # Create the launch configuration variables
     gui = LaunchConfiguration('gui')
     server = LaunchConfiguration('server')
+    use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
     declare_gui_cmd = DeclareLaunchArgument(
         'gui',
@@ -35,6 +36,10 @@ def generate_launch_description():
         'server',
         default_value='true',
         description='Set to "false" not to run gzserver.')
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock if true')
     declare_use_rviz_cmd = DeclareLaunchArgument(
         'use_rviz',
         default_value='True',
@@ -67,6 +72,7 @@ def generate_launch_description():
                 plugin='simrobo_driver::Driver',
                 name='simrobo_driver_node',
                 parameters=[
+                    {'use_sim_time': use_sim_time},
                     {'wheel_radius_size_m': 0.1},
                     {'tread_width_m': 0.33},
                     {'odom_frame_id': 'odom'},
@@ -89,6 +95,8 @@ def generate_launch_description():
         declare_gui_cmd,
         
         declare_server_cmd,
+        
+        declare_use_sim_time_cmd,
         
         declare_use_rviz_cmd,
         

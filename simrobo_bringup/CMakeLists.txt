@@ -8,7 +8,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY params launch rviz
+install(DIRECTORY launch maps params rviz
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

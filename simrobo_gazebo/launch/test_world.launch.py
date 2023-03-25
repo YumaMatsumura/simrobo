@@ -28,6 +28,12 @@ def generate_launch_description():
     server = LaunchConfiguration('server')
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
+    pose = {'x': LaunchConfiguration('x_pose', default='9.0'),
+            'y': LaunchConfiguration('y_pose', default='-5.0'),
+            'z': LaunchConfiguration('z_pose', default='0.2'),
+            'R': LaunchConfiguration('roll', default='0.0'),
+            'P': LaunchConfiguration('pitch', default='0.0'),
+            'Y': LaunchConfiguration('yaw', default='3.14')}
     declare_gui_cmd = DeclareLaunchArgument(
         'gui',
         default_value='true',
@@ -50,10 +56,12 @@ def generate_launch_description():
         package='gazebo_ros', 
         executable='spawn_entity.py',
         arguments=['-entity', 'simrobo',
-                        '-x', '9.0',
-                        '-y', '-5.0',
-                        '-z', '0.2',
-                        '-Y', '3.14',
+                        '-x', pose['x'],
+                        '-y', pose['y'],
+                        '-z', pose['z'],
+                        '-R', pose['R'],
+                        '-P', pose['P'],
+                        '-Y', pose['Y'],
                     '-topic', '/robot_description'],
         output='screen'
     )

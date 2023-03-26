@@ -29,6 +29,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
     use_3d_lidar = LaunchConfiguration('use_3d_lidar')
+    use_gpu = LaunchConfiguration('use_gpu')
     pose = {'x': LaunchConfiguration('x_pose', default='9.0'),
             'y': LaunchConfiguration('y_pose', default='-5.0'),
             'z': LaunchConfiguration('z_pose', default='0.2'),
@@ -55,6 +56,10 @@ def generate_launch_description():
         'use_3d_lidar',
         default_value='False',
         description='Whether to use 3d_lidar')
+    declare_use_gpu_cmd = DeclareLaunchArgument(
+        'use_gpu',
+        default_value='False',
+        description='Whether to use Gazebo gpu_ray')
     
     # Create nodes
     spawn_entity = Node(
@@ -115,10 +120,14 @@ def generate_launch_description():
         
         declare_use_3d_lidar_cmd,
         
+        declare_use_gpu_cmd,
+        
         # ===== display launch (RViz2) ===== #
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(display_launch_file),
-            launch_arguments={'use_3d_lidar': use_3d_lidar}.items()
+            launch_arguments={
+                'use_3d_lidar': use_3d_lidar,
+                'use_gpu': use_gpu}.items()
         ),
         
         # ===== Gazebo ===== #

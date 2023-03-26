@@ -1,47 +1,91 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="velodyne_gazebo" params="name:=velodyne">
+  <xacro:macro name="velodyne_gazebo" params="name:=velodyne gpu:=false">
     <gazebo reference="${name}">
-      <sensor type="ray" name="head_velodyne_sensor">
-        <pose>0 0 0 0 0 0</pose>
-        <visualize>false</visualize>
-        <update_rate>10</update_rate>
-        <ray>
-          <scan>
-            <horizontal>
-              <samples>1024</samples>
-              <resolution>1</resolution>
-              <min_angle>${radians(-180)}</min_angle>
-              <max_angle>${radians( 180)}</max_angle>
-            </horizontal>
-            <vertical>
-              <samples>16</samples>
-              <resolution>1</resolution>
-              <min_angle>${radians(-15)}</min_angle>
-              <max_angle>${radians(15)}</max_angle>
-            </vertical>
-          </scan>
-          <range>
-            <min>0.3</min>
-            <max>101.0</max>
-            <resolution>0.001</resolution>
-          </range>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.0</stddev>
-          </noise>
-        </ray>
-        <plugin name="gazebo_ros_head_velodyne_controller" filename="libgazebo_ros_velodyne_laser.so">
-          <ros>
-            <remapping>~/out:=velodyne_points</remapping>
-          </ros>
-          <frameName>velodyne</frameName>
-          <min_range>0.9</min_range>
-          <max_range>100</max_range>
-          <gaussianNoise>0.008</gaussianNoise>
-        </plugin>
-      </sensor>
+      <xacro:if value="${gpu}">
+        <sensor type="gpu_ray" name="head_velodyne_sensor">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>false</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>1024</samples>
+                <resolution>1</resolution>
+                <min_angle>${radians(-180)}</min_angle>
+                <max_angle>${radians( 180)}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>16</samples>
+                <resolution>1</resolution>
+                <min_angle>${radians(-15)}</min_angle>
+                <max_angle>${radians( 15)}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.3</min>
+              <max>101.0</max>
+              <resolution>0.001</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_head_velodyne_controller" filename="libgazebo_ros_velodyne_laser.so">
+            <ros>
+              <remapping>~/out:=velodyne_points</remapping>
+            </ros>
+            <frameName>velodyne</frameName>
+            <min_range>0.9</min_range>
+            <max_range>100</max_range>
+            <gaussianNoise>0.008</gaussianNoise>
+          </plugin>
+        </sensor>
+      </xacro:if>
+      <xacro:unless value="${gpu}">
+        <sensor type="ray" name="head_velodyne_sensor">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>false</visualize>
+          <update_rate>10</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>1024</samples>
+                <resolution>1</resolution>
+                <min_angle>${radians(-180)}</min_angle>
+                <max_angle>${radians( 180)}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>16</samples>
+                <resolution>1</resolution>
+                <min_angle>${radians(-15)}</min_angle>
+                <max_angle>${radians( 15)}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.3</min>
+              <max>101.0</max>
+              <resolution>0.001</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>0.0</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_head_velodyne_controller" filename="libgazebo_ros_velodyne_laser.so">
+            <ros>
+              <remapping>~/out:=velodyne_points</remapping>
+            </ros>
+            <frameName>velodyne</frameName>
+            <min_range>0.9</min_range>
+            <max_range>100</max_range>
+            <gaussianNoise>0.008</gaussianNoise>
+          </plugin>
+        </sensor>
+      </xacro:unless>
     </gazebo>
   
   </xacro:macro>

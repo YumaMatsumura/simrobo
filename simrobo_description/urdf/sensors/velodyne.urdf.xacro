@@ -2,7 +2,7 @@
 <robot name="velodyne" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/velodyne.gazebo.xacro"/>
   
-  <xacro:macro name="velodyne" params="name:=velodyne parent radius length mass *origin">
+  <xacro:macro name="velodyne" params="name:=velodyne gpu:=false parent radius length mass *origin">
     <material name="${name}_color">
       <color rgba="0.70196 0.70196 0.70196 1.0"/>
     </material>
@@ -37,7 +37,7 @@
     </joint>
     
     <!-- Gazebo Plugin -->
-    <xacro:velodyne_gazebo name="${name}"/>
+    <xacro:velodyne_gazebo name="${name}" gpu="${gpu}"/>
     
   </xacro:macro>
 </robot>

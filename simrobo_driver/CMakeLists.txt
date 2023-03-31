@@ -15,6 +15,18 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+set(driver_executable driver)
+set(driver_library ${driver_executable}_core)
+set(dependencies
+  rclcpp
+  rclcpp_components
+  std_msgs
+  geometry_msgs
+  nav_msgs
+  tf2
+  tf2_ros
+)
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -28,27 +40,34 @@ find_package(tf2_ros REQUIRED)
 include_directories(
   include
 )
-add_library(driver_library SHARED
+
+add_executable(${driver_executable}
+  src/driver_node.cpp
   src/driver_component.cpp
 )
-ament_target_dependencies(driver_library
-  rclcpp
-  rclcpp_components
-  std_msgs
-  geometry_msgs
-  nav_msgs
-  tf2
-  tf2_ros
+add_library(${driver_library} SHARED
+  src/driver_component.cpp
 )
-rclcpp_components_register_nodes(driver_library
+ament_target_dependencies(${driver_executable}
+  ${dependencies}
+)
+ament_target_dependencies(${driver_library}
+  ${dependencies}
+)
+rclcpp_components_register_nodes(${driver_library}
   "simrobo_driver::Driver"
 )
 
-install(TARGETS
-  driver_library
+install(DIRECTORY include/
+  DESTINATION include/
+)
+install(TARGETS  ${driver_executable}
+  DESTINATION lib/${PROJECT_NAME}
+)
+install(TARGETS  ${driver_library}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
-  RUNTIME DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 install(DIRECTORY include/
   DESTINATION include/
@@ -58,14 +77,9 @@ install(DIRECTORY launch cfg
 )
 
 ament_export_include_directories(include)
-ament_export_libraries(driver_library)
-ament_export_dependencies(
-  rclcpp
-  rclcpp_components
-  std_msgs
-  geometry_msgs
-  nav_msgs
-  tf2
-  tf2_ros
+ament_export_libraries(
+  ${driver_executable}
+  ${driver_library}
 )
+ament_export_dependencies(${dependencies})
 ament_package()

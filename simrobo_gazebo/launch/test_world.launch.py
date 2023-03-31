@@ -1,10 +1,11 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, RegisterEventHandler, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, GroupAction, RegisterEventHandler, IncludeLaunchDescription
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node, LoadComposableNodes
@@ -27,6 +28,7 @@ def generate_launch_description():
     gui = LaunchConfiguration('gui')
     server = LaunchConfiguration('server')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    use_composition = LaunchConfiguration('use_composition')
     use_rviz = LaunchConfiguration('use_rviz')
     use_3d_lidar = LaunchConfiguration('use_3d_lidar')
     use_gpu = LaunchConfiguration('use_gpu')
@@ -48,6 +50,10 @@ def generate_launch_description():
         'use_sim_time',
         default_value='true',
         description='Use simulation (Gazebo) clock if true')
+    declare_use_composition_cmd = DeclareLaunchArgument(
+        'use_composition', 
+        default_value='True',
+        description='Whether to use composed driver node')
     declare_use_rviz_cmd = DeclareLaunchArgument(
         'use_rviz',
         default_value='True',
@@ -61,6 +67,53 @@ def generate_launch_description():
         default_value='False',
         description='Whether to use Gazebo gpu_ray')
     
+    # Specify the actions
+    bringup_composable_driver_nodes = GroupAction(
+        condition=IfCondition(use_composition),
+        actions=[
+            Node(
+                package='rclcpp_components',
+                executable='component_container',
+                name='simrobo_container',
+                output='screen'),
+                
+            LoadComposableNodes(
+                target_container='simrobo_container',
+                composable_node_descriptions=[
+                    ComposableNode(
+                        package='simrobo_driver',
+                        plugin='simrobo_driver::Driver',
+                        name='simrobo_driver_node',
+                        parameters=[
+                            {'use_sim_time': use_sim_time},
+                            {'wheel_radius_size_m': 0.1},
+                            {'tread_width_m': 0.33},
+                            {'odom_frame_id': 'odom'},
+                            {'base_frame_id': 'base_footprint'}
+                            ])
+                    ]
+                )
+            ]
+        )
+        
+    bringup_driver_nodes = GroupAction(
+        condition=IfCondition(PythonExpression(['not ', use_composition])),
+        actions=[
+            Node(
+                package='simrobo_driver',
+                executable='driver',
+                name='simrobo_driver_node',
+                parameters=[
+                    {'use_sim_time': use_sim_time},
+                    {'wheel_radius_size_m': 0.1},
+                    {'tread_width_m': 0.33},
+                    {'odom_frame_id': 'odom'},
+                    {'base_frame_id': 'base_footprint'}
+                    ]
+                )
+            ]
+        )
+        
     # Create nodes
     spawn_entity = Node(
         package='gazebo_ros', 
@@ -76,27 +129,8 @@ def generate_launch_description():
         output='screen'
     )
     
-    components_node = Node(
-        package='rclcpp_components',
-        executable='component_container',
-        name='simrobo_container',
-        output='screen')
     
-    load_driver_node = LoadComposableNodes(
-        target_container='simrobo_container',
-        composable_node_descriptions=[
-            ComposableNode(
-                package='simrobo_driver',
-                plugin='simrobo_driver::Driver',
-                name='simrobo_driver_node',
-                parameters=[
-                    {'use_sim_time': use_sim_time},
-                    {'wheel_radius_size_m': 0.1},
-                    {'tread_width_m': 0.33},
-                    {'odom_frame_id': 'odom'},
-                    {'base_frame_id': 'base_footprint'}])
-        ])
-    
+    # Create execute process
     joint_state_broadcaster = ExecuteProcess(
         cmd=["ros2", "control", "load_controller", "joint_state_broadcaster", 
              "--set-state", "active"],
@@ -115,6 +149,8 @@ def generate_launch_description():
         declare_server_cmd,
         
         declare_use_sim_time_cmd,
+        
+        declare_use_composition_cmd,
         
         declare_use_rviz_cmd,
         
@@ -145,6 +181,11 @@ def generate_launch_description():
         
         spawn_entity,
         
+        # ===== Driver Nodes ===== #
+        bringup_composable_driver_nodes,
+        
+        bringup_driver_nodes,
+        
         # ===== Ros2 Control ===== #        
         RegisterEventHandler(
             OnProcessExit(
@@ -158,10 +199,6 @@ def generate_launch_description():
                 target_action=joint_state_broadcaster,
                 on_exit=[velocity_controller]
             )
-        ),      
+        )
         
-        # ===== Components Nodes ===== #
-        components_node,
-        
-        load_driver_node
     ])

@@ -1,5 +1,5 @@
 # simrobo
-[![BuildAndTest](https://img.shields.io/github/workflow/status/YumaMatsumura/simrobo/build%20and%20test/master)](https://github.com/YumaMatsumura/simrobo/actions/workflows/build.yml)
+[![BuildAndTest](https://img.shields.io/github/actions/workflow/status/YumaMatsumura/simrobo/build.yml?branch=humble-devel)](https://github.com/YumaMatsumura/simrobo/actions/workflows/build.yml)
 
 ## 動作環境
  - ROS2 Humble

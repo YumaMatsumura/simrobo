@@ -34,7 +34,8 @@ def generate_launch_description():
         executable='parameter_bridge',
         parameters=[{'use_sim_time': True}],
         arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-                   '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan'],
+                   '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
+                   '/depth_rect_raw@sensor_msgs/msg/Image@gz.msgs.Image'],
         output='screen')
 
     load_joint_state_broadcaster = ExecuteProcess(

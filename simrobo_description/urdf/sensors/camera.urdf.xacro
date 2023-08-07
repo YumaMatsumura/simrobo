@@ -2,7 +2,7 @@
 <robot name="camera" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/camera.gazebo.xacro"/>
   
-  <xacro:macro name="camera" params="name depth width height mass parent *origin">
+  <xacro:macro name="camera" params="name use_ignition:=true depth width height mass parent *origin">
     <material name="${name}_color">
       <color rgba="0.70196 0.70196 0.70196 1.0"/>
     </material>
@@ -37,7 +37,7 @@
     </joint>
     
     <!-- Gazebo Plugin -->
-    <xacro:camera_gazebo name="${name}"/>
+    <xacro:camera_gazebo name="${name}" use_ignition="${use_ignition}"/>
     
   </xacro:macro>
 </robot>

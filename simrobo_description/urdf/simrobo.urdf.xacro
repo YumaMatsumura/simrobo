@@ -6,16 +6,18 @@
   <xacro:include filename="$(find simrobo_description)/urdf/wheel/caster.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/lidar.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/velodyne.urdf.xacro" />
-  <xacro:include filename="$(find simrobo_description)/urdf/sensors/imu.urdf.xacro" />
+  <!--xacro:include filename="$(find simrobo_description)/urdf/sensors/imu.urdf.xacro" />
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/gps.urdf.xacro" />
-  <xacro:include filename="$(find simrobo_description)/urdf/sensors/camera.urdf.xacro" />
+  <xacro:include filename="$(find simrobo_description)/urdf/sensors/camera.urdf.xacro" / -->
   <xacro:include filename="$(find simrobo_description)/urdf/simrobo.ros2_control.xacro" />
   
   <!-- arg -->
+  <xacro:arg name="use_ignition" default="true"/>
   <xacro:arg name="use_3d_lidar" default="false"/>
   <xacro:arg name="gpu" default="false"/>
   
   <!-- property -->
+  <xacro:property name="use_ignition" value="$(arg use_ignition)"/>
   <xacro:property name="use_3d_lidar" value="$(arg use_3d_lidar)"/>
   <xacro:property name="gpu" value="$(arg gpu)"/>
   <xacro:property name="body_depth" value="0.4"/>
@@ -101,11 +103,11 @@
     </xacro:velodyne>
   </xacro:if>
   <xacro:unless value="${use_3d_lidar}">
-    <xacro:lidar name="laser" gpu="${gpu}" parent="base_link" radius="${lidar_2d_radius}" length="${lidar_2d_length}" mass="${lidar_2d_mass}">
+    <xacro:lidar name="laser" use_ignition="${use_ignition}" gpu="${gpu}" parent="base_link" radius="${lidar_2d_radius}" length="${lidar_2d_length}" mass="${lidar_2d_mass}">
       <origin xyz="0 0 ${body_height+lidar_2d_length/2}" rpy="0 0 0"/>
     </xacro:lidar>
   </xacro:unless>
-  <xacro:imu name="imu" parent="base_link" length="${imu_length}" height="${imu_height}" mass="${imu_mass}">
+  <!--xacro:imu name="imu" parent="base_link" length="${imu_length}" height="${imu_height}" mass="${imu_mass}">
     <origin xyz="0 0 ${body_height/2}" rpy="0 0 0"/>
   </xacro:imu>
   <xacro:gps name="gps" parent="base_link" length="${gps_length}" height="${gps_height}" mass="${gps_mass}">
@@ -113,9 +115,9 @@
   </xacro:gps>
   <xacro:camera name="camera" parent="base_link" depth="${camera_depth}" width="${camera_width}" height="${camera_height}" mass="${camera_mass}">
     <origin xyz="${(body_depth+camera_depth)/2} 0 ${camera_pos_z}" rpy="0 0 0"/>
-  </xacro:camera>
+  </xacro:camera -->
   
   <!-- ======== ros2_control ======== -->
-  <xacro:simrobo_ros2_control name="simrobo"/>
+  <xacro:simrobo_ros2_control name="simrobo" use_ignition="${use_ignition}"/>
   
 </robot>

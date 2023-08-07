@@ -1,27 +1,50 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="simrobo_ros2_control" params="name">
+  <xacro:macro name="simrobo_ros2_control" params="name use_ignition">
   
     <ros2_control name="${name}" type="system">
       <hardware>
-        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        <xacro:if value="${use_ignition}">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="${use_ignition}">
+          <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </xacro:unless>
       </hardware>
 
       <joint name="left_wheel_joint">
+        <param name="initial_value">0.0</param>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
       </joint>
       <joint name="right_wheel_joint">
+        <param name="initial_value">0.0</param>
         <command_interface name="velocity"/>
         <state_interface name="position"/>
         <state_interface name="velocity"/>
       </joint>
     </ros2_control>
     <gazebo>
-      <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
-        <parameters>$(find simrobo_description)/controllers/controllers.yaml</parameters>
-      </plugin>
+      <xacro:if value="${use_ignition}">
+        <plugin
+          filename="ignition-gazebo-sensors-system"
+          name="ignition::gazebo::systems::Sensors">
+          <render_engine>ogre2</render_engine>
+        </plugin>
+        <plugin
+          filename="gz_ros2_control-system"
+          name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <robot_param>robot_description</robot_param>
+          <robot_param_node>robot_state_publisher</robot_param_node>
+          <parameters>$(find simrobo_description)/controllers/controllers.yaml</parameters>
+        </plugin>
+      </xacro:if>
+      <xacro:unless value="${use_ignition}">
+        <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+          <parameters>$(find simrobo_description)/controllers/controllers.yaml</parameters>
+        </plugin>
+      </xacro:unless>
     </gazebo>
   </xacro:macro>
 </robot>

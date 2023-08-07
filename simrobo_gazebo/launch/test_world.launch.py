@@ -162,6 +162,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(display_launch_file),
             launch_arguments={
+                'use_ignition': 'false',
                 'use_3d_lidar': use_3d_lidar,
                 'use_gpu': use_gpu}.items()
         ),

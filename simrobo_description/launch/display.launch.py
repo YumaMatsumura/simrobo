@@ -12,6 +12,7 @@ def generate_launch_description():
     # Create the launch configuration variables
     use_sim_time = LaunchConfiguration('use_sim_time')
     use_rviz = LaunchConfiguration('use_rviz')
+    use_ignition = LaunchConfiguration('use_ignition')
     use_3d_lidar = LaunchConfiguration('use_3d_lidar')
     use_gpu = LaunchConfiguration('use_gpu')
     declare_use_sim_time_cmd = DeclareLaunchArgument(
@@ -22,6 +23,10 @@ def generate_launch_description():
         'use_rviz',
         default_value='True',
         description='Whether to use rviz')
+    declare_use_ignition_cmd = DeclareLaunchArgument(
+        'use_ignition',
+        default_value='True',
+        description='Use ignition gazebo if true, use gazebo if false')
     declare_use_3d_lidar_cmd = DeclareLaunchArgument(
         'use_3d_lidar',
         default_value='False',
@@ -36,7 +41,7 @@ def generate_launch_description():
     rviz_file = os.path.join(get_package_share_directory('simrobo_description'), 'rviz', 'simrobo.rviz')
     xacro_file = os.path.join(get_package_share_directory('simrobo_description'), 'urdf', 'simrobo.urdf.xacro')
     
-    robot_description = Command(['xacro', ' ', xacro_file, ' use_3d_lidar:=', use_3d_lidar, ' gpu:=', use_gpu])
+    robot_description = Command(['xacro', ' ', xacro_file, ' use_ignition:=', use_ignition, ' use_3d_lidar:=', use_3d_lidar, ' gpu:=', use_gpu])
     
         
     # Create nodes
@@ -47,8 +52,8 @@ def generate_launch_description():
             name='robot_state_publisher',
             output='screen',
             parameters=[
-              {'use_sim_time': use_sim_time},
-              {'robot_description': robot_description}]),
+                {'use_sim_time': use_sim_time},
+                {'robot_description': robot_description}]),
             
         Node(
             package='joint_state_publisher',
@@ -78,6 +83,8 @@ def generate_launch_description():
         declare_use_sim_time_cmd,
         
         declare_use_rviz_cmd,
+        
+        declare_use_ignition_cmd,
         
         declare_use_3d_lidar_cmd,
         

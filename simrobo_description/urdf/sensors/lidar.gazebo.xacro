@@ -1,74 +1,112 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:macro name="lidar_gazebo" params="name:=laser gpu:=false">
+  <xacro:macro name="lidar_gazebo" params="name:=laser use_ignition:=true gpu:=false">
     <gazebo reference="${name}">
-      <xacro:if value="${gpu}">
-        <sensor type="gpu_ray" name="head_lidar_sensor">
-          <pose>0 0 0 0 0 0</pose>
-          <visualize>true</visualize>
+      <xacro:if value="${use_ignition}">
+        <sensor type="gpu_lidar" name="head_lidar_sensor">
+          <ignition_frame_id>laser</ignition_frame_id>
+          <topic>scan</topic>
           <update_rate>20</update_rate>
-          <ray>
-            <scan>
-              <horizontal>
-                <samples>1080</samples>
-                <resolution>1</resolution>
-                <min_angle>${radians(-180)}</min_angle>
-                <max_angle>${radians( 180)}</max_angle>
-              </horizontal>
-            </scan>
-            <range>
-              <min>0.1</min>
-              <max>40.0</max>
-              <resolution>0.01</resolution>
-            </range>
-            <noise>
-              <type>gaussian</type>
-              <mean>0.0</mean>
-              <stddev>0.01</stddev>
-            </noise>
-          </ray>
-          <plugin name="gazebo_ros_head_lidar_controller" filename="libgazebo_ros_ray_sensor.so">
-            <ros>
-              <remapping>~/out:=scan</remapping>
-            </ros>
-            <output_type>sensor_msgs/LaserScan</output_type>
-            <frameName>laser</frameName>
-          </plugin>
+          <lidar>
+           <scan>
+             <horizontal>
+               <samples>1080</samples>
+               <resolution>1</resolution>
+               <min_angle>${radians(-180)}</min_angle>
+               <max_angle>${radians( 180)}</max_angle>
+             </horizontal>
+             <vertical>
+               <samples>1</samples>
+               <resolution>1</resolution>
+               <min_angle>${radians(-180)}</min_angle>
+               <max_angle>${radians( 180)}</max_angle>
+             </vertical>
+           </scan>
+           <range>
+             <min>0.1</min>
+             <max>40.0</max>
+             <resolution>0.01</resolution>
+           </range>
+           <noise>
+             <type>gaussian</type>
+             <mean>0.0</mean>
+             <stddev>0.01</stddev>
+           </noise>
+           <frame_id>/laser</frame_id>
+         </lidar>
+         <alwaysOn>1</alwaysOn>
+         <visualize>true</visualize>
         </sensor>
       </xacro:if>
-      <xacro:unless value="${gpu}">
-        <sensor type="ray" name="head_lidar_sensor">
-          <pose>0 0 0 0 0 0</pose>
-          <visualize>true</visualize>
-          <update_rate>20</update_rate>
-          <ray>
-            <scan>
-              <horizontal>
-                <samples>1080</samples>
-                <resolution>1</resolution>
-                <min_angle>${radians(-180)}</min_angle>
-                <max_angle>${radians( 180)}</max_angle>
-              </horizontal>
-            </scan>
-            <range>
-              <min>0.1</min>
-              <max>40.0</max>
-              <resolution>0.01</resolution>
-            </range>
-            <noise>
-              <type>gaussian</type>
-              <mean>0.0</mean>
-              <stddev>0.01</stddev>
-            </noise>
-          </ray>
-          <plugin name="gazebo_ros_head_lidar_controller" filename="libgazebo_ros_ray_sensor.so">
-            <ros>
-              <remapping>~/out:=scan</remapping>
-            </ros>
-            <output_type>sensor_msgs/LaserScan</output_type>
-            <frameName>laser</frameName>
-          </plugin>
-        </sensor>
+      <xacro:unless value="${use_ignition}">
+        <xacro:if value="${gpu}">
+          <sensor type="gpu_ray" name="head_lidar_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>20</update_rate>
+            <ray>
+              <scan>
+                <horizontal>
+                  <samples>1080</samples>
+                  <resolution>1</resolution>
+                  <min_angle>${radians(-180)}</min_angle>
+                  <max_angle>${radians( 180)}</max_angle>
+                </horizontal>
+              </scan>
+              <range>
+                <min>0.1</min>
+                <max>40.0</max>
+                <resolution>0.01</resolution>
+              </range>
+              <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+              </noise>
+            </ray>
+            <plugin name="gazebo_ros_head_lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+              <ros>
+                <remapping>~/out:=scan</remapping>
+              </ros>
+              <output_type>sensor_msgs/LaserScan</output_type>
+              <frameName>laser</frameName>
+            </plugin>
+          </sensor>
+        </xacro:if>
+        <xacro:unless value="${gpu}">
+          <sensor type="ray" name="head_lidar_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>20</update_rate>
+            <ray>
+              <scan>
+                <horizontal>
+                  <samples>1080</samples>
+                  <resolution>1</resolution>
+                  <min_angle>${radians(-180)}</min_angle>
+                  <max_angle>${radians( 180)}</max_angle>
+                </horizontal>
+              </scan>
+              <range>
+                <min>0.1</min>
+                <max>40.0</max>
+                <resolution>0.01</resolution>
+              </range>
+              <noise>
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+              </noise>
+            </ray>
+            <plugin name="gazebo_ros_head_lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+              <ros>
+                <remapping>~/out:=scan</remapping>
+              </ros>
+              <output_type>sensor_msgs/LaserScan</output_type>
+              <frameName>laser</frameName>
+            </plugin>
+          </sensor>
+        </xacro:unless>
       </xacro:unless>
     </gazebo>
   

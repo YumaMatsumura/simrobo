@@ -8,9 +8,11 @@ from launch_ros.actions.node import Node
 
 def get_map_folder_path(base_path, map_name):
     return [base_path, map_name]
-    
+
+
 def get_map_file_path(base_path, map_name):
     return [base_path, map_name, map_name]
+
 
 def generate_launch_description():
     # Create the launch configuration variables
@@ -19,21 +21,20 @@ def generate_launch_description():
         'map_name',
         default_value='/sample_map',
         description='Set map name')
-    
+
     # Declare base path
     maps_folder_path = os.environ["MAPS_FOLDER_PATH"]
-    
-    
+
     return LaunchDescription([
         declare_map_name_cmd,
-        
+
         ExecuteProcess(
             cmd=[
                 'mkdir -p',
                 get_map_folder_path(maps_folder_path, map_name)
                 ],
             shell=True),
-        
+
         TimerAction(
             period=3.0,
             actions=[

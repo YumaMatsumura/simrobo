@@ -3,7 +3,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, GroupAction, RegisterEventHandler, IncludeLaunchDescription
+from launch.actions import (DeclareLaunchArgument, ExecuteProcess, GroupAction,
+                            RegisterEventHandler, IncludeLaunchDescription)
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration, PythonExpression
@@ -135,9 +136,9 @@ def generate_launch_description():
         # ===== Ignition ===== #
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gz_sim_launch_file),
-            launch_arguments=[('gz_args', [' -r -v 3 empty.sdf'
-                                            + ' --gui-config ' + gui_config_file
-                                            ])]),
+            launch_arguments=[
+                ('gz_args', [' -r -v 3 empty.sdf' + ' --gui-config ' + gui_config_file])
+                ]),
         gz_spawn_entity,
         gz_bridge,
 

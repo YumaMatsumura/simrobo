@@ -9,7 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(xacro REQUIRED)
 
-install(DIRECTORY gui launch
+install(DIRECTORY gui launch worlds
   DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)

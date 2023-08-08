@@ -23,7 +23,7 @@ def generate_launch_description():
         description='Set map name')
 
     # Declare base path
-    maps_folder_path = os.environ["MAPS_FOLDER_PATH"]
+    maps_folder_path = os.environ['MAPS_FOLDER_PATH']
 
     return LaunchDescription([
         declare_map_name_cmd,

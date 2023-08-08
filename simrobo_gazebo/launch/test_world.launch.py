@@ -4,12 +4,12 @@ from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import (DeclareLaunchArgument, ExecuteProcess, GroupAction,
-                            RegisterEventHandler, IncludeLaunchDescription)
+                            IncludeLaunchDescription, RegisterEventHandler)
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.event_handlers import OnProcessExit
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.actions import Node, LoadComposableNodes
+from launch_ros.actions import LoadComposableNodes, Node
 from launch_ros.descriptions import ComposableNode
 
 
@@ -131,13 +131,13 @@ def generate_launch_description():
 
     # Create execute process
     joint_state_broadcaster = ExecuteProcess(
-        cmd=["ros2", "control", "load_controller", "joint_state_broadcaster",
-             "--set-state", "active"],
-        output="screen")
+        cmd=['ros2', 'control', 'load_controller', 'joint_state_broadcaster',
+             '--set-state', 'active'],
+        output='screen')
     velocity_controller = ExecuteProcess(
-        cmd=["ros2", "control", "load_controller", "velocity_controller",
-             "--set-state", "active"],
-        output="screen")
+        cmd=['ros2', 'control', 'load_controller', 'velocity_controller',
+             '--set-state', 'active'],
+        output='screen')
 
     return LaunchDescription([
         declare_gui_cmd,

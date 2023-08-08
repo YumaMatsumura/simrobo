@@ -14,14 +14,14 @@ using namespace std::placeholders;
 
 namespace simrobo_driver
 {
-  
+
 class Driver : public rclcpp::Node
 {
 public:
   explicit Driver(
-    const rclcpp::NodeOptions& options = rclcpp::NodeOptions()
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions()
   );
-  
+
 private:
   void initVariables();
   void twistCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
@@ -30,12 +30,12 @@ private:
   void publishTF();
   void publishVelCommand();
   double velocityToRound(double vel);
-  
+
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr pub_servo_;
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr pub_odom_;
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_twist_;
   rclcpp::TimerBase::SharedPtr timer_;
-  
+
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   geometry_msgs::msg::Pose2D pose_;
   geometry_msgs::msg::Twist twist_buff;

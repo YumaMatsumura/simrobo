@@ -20,7 +20,6 @@ def generate_launch_description():
     description_dir = get_package_share_directory('simrobo_description')
     display_launch_file = os.path.join(description_dir, 'launch', 'display.launch.py')
     simrobo_ignition_dir = get_package_share_directory('simrobo_ignition')
-    gui_config_file = os.path.join(simrobo_ignition_dir, 'gui', 'gui.config')
     world_file = os.path.join(simrobo_ignition_dir, 'worlds', 'test_world.sdf')
 
     # Create the launch configuration variables

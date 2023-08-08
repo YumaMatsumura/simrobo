@@ -3,7 +3,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, GroupAction, RegisterEventHandler, IncludeLaunchDescription
+from launch.actions import (DeclareLaunchArgument, ExecuteProcess, GroupAction,
+                            RegisterEventHandler, IncludeLaunchDescription)
 from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch.event_handlers import OnProcessExit
@@ -20,7 +21,7 @@ def generate_launch_description():
         get_package_share_directory('gazebo_ros'), 'launch', 'gzserver.launch.py')
     gzclient_launch_file = os.path.join(
         get_package_share_directory('gazebo_ros'), 'launch', 'gzclient.launch.py')
-    
+
     # Create the launch configuration variables
     gui = LaunchConfiguration('gui')
     server = LaunchConfiguration('server')
@@ -48,7 +49,7 @@ def generate_launch_description():
         default_value='true',
         description='Use simulation (Gazebo) clock if true')
     declare_use_composition_cmd = DeclareLaunchArgument(
-        'use_composition', 
+        'use_composition',
         default_value='True',
         description='Whether to use composed driver node')
     declare_use_rviz_cmd = DeclareLaunchArgument(
@@ -63,7 +64,7 @@ def generate_launch_description():
         'use_gpu',
         default_value='False',
         description='Whether to use Gazebo gpu_ray')
-    
+
     # Specify the actions
     bringup_composable_driver_nodes = GroupAction(
         condition=IfCondition(use_composition),
@@ -73,7 +74,6 @@ def generate_launch_description():
                 executable='component_container',
                 name='simrobo_container',
                 output='screen'),
-                
             LoadComposableNodes(
                 target_container='simrobo_container',
                 composable_node_descriptions=[
@@ -92,7 +92,7 @@ def generate_launch_description():
                 )
             ]
         )
-        
+
     bringup_driver_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
@@ -110,85 +110,76 @@ def generate_launch_description():
                 )
             ]
         )
-    
+
     # Create nodes
     spawn_entity = Node(
-        package='gazebo_ros', 
+        package='gazebo_ros',
         executable='spawn_entity.py',
-        arguments=['-entity', 'simrobo',
-                        '-x', pose['x'],
-                        '-y', pose['y'],
-                        '-z', pose['z'],
-                        '-R', pose['R'],
-                        '-P', pose['P'],
-                        '-Y', pose['Y'],
-                    '-topic', '/robot_description'],
+        arguments=[
+            '-entity', 'simrobo',
+            '-x', pose['x'],
+            '-y', pose['y'],
+            '-z', pose['z'],
+            '-R', pose['R'],
+            '-P', pose['P'],
+            '-Y', pose['Y'],
+            '-topic', '/robot_description'],
         output='screen')
-    
-    
+
     # Create execute process
     joint_state_broadcaster = ExecuteProcess(
-        cmd=["ros2", "control", "load_controller", "joint_state_broadcaster", 
+        cmd=["ros2", "control", "load_controller", "joint_state_broadcaster",
              "--set-state", "active"],
         output="screen")
-    
+
     velocity_controller = ExecuteProcess(
-        cmd=["ros2", "control", "load_controller", "velocity_controller", 
+        cmd=["ros2", "control", "load_controller", "velocity_controller",
              "--set-state", "active"],
         output="screen")
 
     return LaunchDescription([
         declare_gui_cmd,
-        
         declare_server_cmd,
-        
         declare_use_sim_time_cmd,
-        
         declare_use_composition_cmd,
-        
         declare_use_rviz_cmd,
-        
         declare_use_3d_lidar_cmd,
-        
         declare_use_gpu_cmd,
-        
+
         # ===== display launch (RViz2) ===== #
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(display_launch_file),
             launch_arguments={
+                'use_rviz': use_rviz,
                 'use_ignition': 'false',
                 'use_3d_lidar': use_3d_lidar,
                 'use_gpu': use_gpu}.items()),
-        
+
         # ===== Gazebo ===== #
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gzserver_launch_file),
             condition=IfCondition(server)),
-        
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(gzclient_launch_file),
             condition=IfCondition(gui)),
-        
         spawn_entity,
-        
+
         # ===== Driver Nodes ===== #
         bringup_composable_driver_nodes,
-        
         bringup_driver_nodes,
-        
-        # ===== Ros2 Control ===== #        
+
+        # ===== Ros2 Control ===== #
         RegisterEventHandler(
             OnProcessExit(
                 target_action=spawn_entity,
                 on_exit=[velocity_controller]
                 )
             ),
-        
+
         RegisterEventHandler(
             OnProcessExit(
                 target_action=joint_state_broadcaster,
                 on_exit=[velocity_controller]
                 )
             )
-        
     ])

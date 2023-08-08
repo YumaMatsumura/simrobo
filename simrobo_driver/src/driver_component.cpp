@@ -4,9 +4,8 @@ namespace simrobo_driver
 {
 
 // ========== コンストラクタ ========== //
-Driver::Driver(
-  const rclcpp::NodeOptions& options
-): Node("simrobo_driver", options)
+Driver::Driver(const rclcpp::NodeOptions & options)
+: Node("simrobo_driver", options)
 {
   // initialize
   initVariables();
@@ -25,12 +24,11 @@ Driver::Driver(
   pub_odom_ = this->create_publisher<nav_msgs::msg::Odometry>(
     "odom", rclcpp::SensorDataQoS());
   sub_twist_ = this->create_subscription<geometry_msgs::msg::Twist>(
-    "cmd_vel", rclcpp::SensorDataQoS(), std::bind(&Driver::twistCallback, this, _1)
-  );
-  
+    "cmd_vel", rclcpp::SensorDataQoS(), std::bind(&Driver::twistCallback, this, _1));
+
   double duration_ms = 1000.0 / frequency_;
   timer_ = this->create_wall_timer(
-    std::chrono::milliseconds(static_cast<int>(duration_ms)), 
+    std::chrono::milliseconds(static_cast<int>(duration_ms)),
     std::bind(&Driver::updateCallback, this));
 }
 
@@ -48,10 +46,10 @@ void Driver::initVariables()
 // ========== Twistのコールバック関数 ========== //
 void Driver::twistCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
 {
-  twist_buff.linear.x  = msg->linear.x;
-  twist_buff.linear.y  = msg->linear.y;
+  twist_buff.linear.x = msg->linear.x;
+  twist_buff.linear.y = msg->linear.y;
   twist_buff.angular.z = msg->angular.z;
-  
+
 }
 
 // ========== Timerのコールバック関数 ========== //
@@ -59,8 +57,10 @@ void Driver::updateCallback()
 {
   // pose(x, y, theta)の計算
   double duration_sec = 1.0 / frequency_;
-  pose_.x += twist_buff.linear.x * cos(pose_.theta + (twist_buff.angular.z * duration_sec / 2.0)) * duration_sec;
-  pose_.y += twist_buff.linear.x * sin(pose_.theta + (twist_buff.angular.z * duration_sec / 2.0)) * duration_sec;
+  pose_.x += twist_buff.linear.x * cos(pose_.theta + (twist_buff.angular.z * duration_sec / 2.0)) *
+    duration_sec;
+  pose_.y += twist_buff.linear.x * sin(pose_.theta + (twist_buff.angular.z * duration_sec / 2.0)) *
+    duration_sec;
   pose_.theta += twist_buff.angular.z * duration_sec;
 
   // Odometryの計算
@@ -77,28 +77,28 @@ void Driver::updateCallback()
 void Driver::publishOdom()
 {
   nav_msgs::msg::Odometry odom_msg;
-  
+
   tf2::Quaternion q;
   q.setRPY(0.0, 0.0, pose_.theta);
 
   odom_msg.header.stamp = this->now();
-  
+
   odom_msg.header.frame_id = odom_frame_id_;
   odom_msg.child_frame_id = base_frame_id_;
-  
+
   odom_msg.pose.pose.position.x = pose_.x;
   odom_msg.pose.pose.position.y = pose_.y;
   odom_msg.pose.pose.position.z = 0.0;
-  
+
   odom_msg.pose.pose.orientation.x = q.x();
   odom_msg.pose.pose.orientation.y = q.y();
   odom_msg.pose.pose.orientation.z = q.z();
   odom_msg.pose.pose.orientation.w = q.w();
-  
+
   odom_msg.twist.twist.linear.x = twist_buff.linear.x;
   odom_msg.twist.twist.linear.y = 0.0;
   odom_msg.twist.twist.linear.z = 0.0;
-  
+
   odom_msg.twist.twist.angular.x = 0.0;
   odom_msg.twist.twist.angular.y = 0.0;
   odom_msg.twist.twist.angular.z = twist_buff.angular.z;
@@ -110,24 +110,24 @@ void Driver::publishOdom()
 void Driver::publishTF()
 {
   geometry_msgs::msg::TransformStamped tf_msg;
-  
+
   tf2::Quaternion q;
   q.setRPY(0.0, 0.0, pose_.theta);
-  
+
   tf_msg.header.stamp = this->now();
-  
+
   tf_msg.header.frame_id = odom_frame_id_;
   tf_msg.child_frame_id = base_frame_id_;
-  
+
   tf_msg.transform.translation.x = pose_.x;
   tf_msg.transform.translation.y = pose_.y;
   tf_msg.transform.translation.z = 0.0;
-  
+
   tf_msg.transform.rotation.x = q.x();
   tf_msg.transform.rotation.y = q.y();
   tf_msg.transform.rotation.z = q.z();
   tf_msg.transform.rotation.w = q.w();
-  
+
   tf_broadcaster_->sendTransform(tf_msg);
 }
 

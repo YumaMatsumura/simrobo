@@ -1,9 +1,9 @@
 name: build and test
-on: 
+on:
   pull_request:
-    branches: [ iron-devel ]
+    branches: [iron-devel]
   push:
-    branches: [ iron-devel ]
+    branches: [iron-devel]
 jobs:
   build_simrobo:
     runs-on: ${{ matrix.os }}
@@ -19,7 +19,7 @@ jobs:
             ros_distribution: iron
             ros_version: 2
     container:
-      image: ${{ matrix.docker_image }} 
+      image: ${{ matrix.docker_image }}
     steps:
       - name: Setup directories
         run: mkdir -p ros2_ws/src

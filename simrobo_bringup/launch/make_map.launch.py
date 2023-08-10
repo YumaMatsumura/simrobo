@@ -24,9 +24,9 @@ def generate_launch_description():
         default_value='true',
         description='Use simulation (Gazebo) clock if true')
     declare_use_keyboard_cmd = DeclareLaunchArgument(
-      'use_keyboard',
-      default_value='False',
-      description='Whether to use keyboard to control robot')
+        'use_keyboard',
+        default_value='False',
+        description='Whether to use keyboard to control robot')
 
     # Create nodes
     bringup_make_map_nodes = GroupAction([
@@ -53,5 +53,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         declare_use_sim_time_cmd,
+        declare_use_keyboard_cmd,
         bringup_make_map_nodes
     ])

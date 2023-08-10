@@ -17,9 +17,9 @@ def generate_launch_description():
     # Create the launch configuration variables
     use_keyboard = LaunchConfiguration('use_keyboard')
     declare_use_keyboard_cmd = DeclareLaunchArgument(
-      'use_keyboard',
-      default_value='False',
-      description='Whether to use keyboard to control robot')
+        'use_keyboard',
+        default_value='False',
+        description='Whether to use keyboard to control robot')
 
     # Create nodes
     load_joy_nodes = GroupAction(

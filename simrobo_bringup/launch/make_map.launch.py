@@ -11,46 +11,47 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the directory
-    bringup_dir = get_package_share_directory("simrobo_bringup")
-    params_file = os.path.join(bringup_dir, "params", "make_map.yaml")
-    teleop_twist_launch_file = os.path.join(bringup_dir, "launch", "teleop_twist_nodes.launch.py")
-    rviz_file = os.path.join(bringup_dir, "rviz", "make_map.rviz")
+    bringup_dir = get_package_share_directory('simrobo_bringup')
+    params_file = os.path.join(bringup_dir, 'params', 'make_map.yaml')
+    teleop_twist_launch_file = os.path.join(bringup_dir, 'launch', 'teleop_twist_nodes.launch.py')
+    rviz_file = os.path.join(bringup_dir, 'rviz', 'make_map.rviz')
 
     # Create the launch configuration variables
-    use_sim_time = LaunchConfiguration("use_sim_time")
-    use_keyboard = LaunchConfiguration("use_keyboard")
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    use_keyboard = LaunchConfiguration('use_keyboard')
     declare_use_sim_time_cmd = DeclareLaunchArgument(
-        "use_sim_time",
-        default_value="true",
-        description="Use simulation (Gazebo) clock if true")
+        'use_sim_time',
+        default_value='true',
+        description='Use simulation (Gazebo) clock if true')
     declare_use_keyboard_cmd = DeclareLaunchArgument(
-        "use_keyboard",
-        default_value="False",
-        description="Whether to use keyboard to control robot")
+      'use_keyboard',
+      default_value='False',
+      description='Whether to use keyboard to control robot')
 
     # Create nodes
     bringup_make_map_nodes = GroupAction([
-        IncludeLaunchDescription(PythonLaunchDescriptionSource(teleop_twist_launch_file)),
-        Node(
-            package="slam_toolbox",
-            executable="async_slam_toolbox_node",
-            name="slam_toolbox",
-            output="screen",
-            parameters=[
-                params_file,
-                {"use_sim_time": use_sim_time},
-                {"use_keyboard": use_keyboard}]),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(teleop_twist_launch_file)),
 
         Node(
-            package="rviz2",
-            executable="rviz2",
-            output="screen",
-            arguments=["-d", rviz_file],
-            parameters=[{"use_sim_time": use_sim_time}])
+            package='slam_toolbox',
+            executable='async_slam_toolbox_node',
+            name='slam_toolbox',
+            output='screen',
+            parameters=[
+                params_file,
+                {'use_sim_time': use_sim_time},
+                {'use_keyboard': use_keyboard}]),
+
+        Node(
+            package='rviz2',
+            executable='rviz2',
+            output='screen',
+            arguments=['-d', rviz_file],
+            parameters=[{'use_sim_time': use_sim_time}])
     ])
 
     return LaunchDescription([
         declare_use_sim_time_cmd,
-        declare_use_keyboard_cmd,
         bringup_make_map_nodes
     ])

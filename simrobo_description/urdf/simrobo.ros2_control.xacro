@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:macro name="simrobo_ros2_control" params="name use_ignition">
-  
+
     <ros2_control name="${name}" type="system">
       <hardware>
         <xacro:if value="${use_ignition}">

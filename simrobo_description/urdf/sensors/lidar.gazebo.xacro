@@ -109,6 +109,6 @@
         </xacro:unless>
       </xacro:unless>
     </gazebo>
-  
+
   </xacro:macro>
 </robot>

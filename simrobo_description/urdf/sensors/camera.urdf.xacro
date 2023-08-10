@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
 <robot name="camera" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find simrobo_description)/urdf/sensors/camera.gazebo.xacro"/>
-  
+
   <xacro:macro name="camera" params="name use_ignition:=true depth width height mass parent *origin">
     <material name="${name}_color">
       <color rgba="0.70196 0.70196 0.70196 1.0"/>
     </material>
-    
+
     <link name="${name}_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -29,15 +29,15 @@
         </geometry>
       </collision>
     </link>
-    
+
     <joint name="${name}_joint" type="fixed">
       <xacro:insert_block name="origin"/>
       <parent link="${parent}"/>
       <child link="${name}_link"/>
     </joint>
-    
+
     <!-- Gazebo Plugin -->
     <xacro:camera_gazebo name="${name}" use_ignition="${use_ignition}"/>
-    
+
   </xacro:macro>
 </robot>

@@ -76,6 +76,6 @@
         </sensor>
       </xacro:unless>
     </gazebo>
-  
+
   </xacro:macro>
 </robot>

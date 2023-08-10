@@ -13,6 +13,6 @@
         </plugin>
       </sensor>
     </gazebo>
-  
+
   </xacro:macro>
 </robot>

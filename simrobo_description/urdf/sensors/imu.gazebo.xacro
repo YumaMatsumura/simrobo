@@ -13,9 +13,9 @@
           <initial_orientation_as_reference>false</initial_orientation_as_reference>
           <frameName>${name}_link</frameName>
         </plugin>
-        
+
       </sensor>
     </gazebo>
-  
+
   </xacro:macro>
 </robot>

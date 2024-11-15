@@ -56,7 +56,7 @@ def generate_launch_description():
         executable='parameter_bridge',
         parameters=[{'use_sim_time': True}],
         arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-                   '/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan',
+                   '/lidar/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked',
                    '/color/image_raw@sensor_msgs/msg/Image@gz.msgs.Image',
                    '/depth_rect_raw@sensor_msgs/msg/Image@gz.msgs.Image'],
         output='screen')

@@ -5,7 +5,7 @@
       <xacro:if value="${use_ignition}">
         <sensor type="gpu_lidar" name="head_lidar_sensor">
           <ignition_frame_id>laser</ignition_frame_id>
-          <topic>scan</topic>
+          <topic>lidar</topic>
           <update_rate>20</update_rate>
           <lidar>
            <scan>
@@ -16,10 +16,10 @@
                <max_angle>${radians( 180)}</max_angle>
              </horizontal>
              <vertical>
-               <samples>1</samples>
+               <samples>32</samples>
                <resolution>1</resolution>
-               <min_angle>${radians(-180)}</min_angle>
-               <max_angle>${radians( 180)}</max_angle>
+               <min_angle>${radians(-25)}</min_angle>
+               <max_angle>${radians( 15)}</max_angle>
              </vertical>
            </scan>
            <range>
@@ -36,6 +36,12 @@
          </lidar>
          <alwaysOn>1</alwaysOn>
          <visualize>true</visualize>
+         <plugin
+           filename="RosGzPointCloud"
+           name="ros_gz_point_cloud::PointCloud">
+           <topic>points</topic>
+           <frame_id>laser</frame_id>
+         </plugin>
         </sensor>
       </xacro:if>
       <xacro:unless value="${use_ignition}">
